@@ -120,10 +120,11 @@ const Cell = ({ value, onChange, isSolving }) => {
       value={value}
       onChange={(e) => onChange(e)}
       maxLength="1"
+      min={0}
+      max={9}
       />
       );
   };
-    // onChange={(e) => onChange(e.currentTarget.className)}
 
 // A component that renders a single row of the Sudoku board
 const Row = ({ row, onChange, isSolving }) => {
@@ -141,24 +142,65 @@ const Row = ({ row, onChange, isSolving }) => {
   );
 };
 
+// To be modified for showing 3x3 Blocks
+// const Block = ({ row, onChange, isSolving }) => {
+//   return (
+//     <div className="block">
+//       {row.map((value, index) => (
+//         <Cell
+//           isSolving={isSolving}
+//           key={index}
+//           value={value}
+//           onChange={(e) => onChange(e, index, e.target.value)}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
+
 // A component that renders the entire Sudoku board
 const Board = ({ board, onChange, isSolving }) => {
   return (
-    <div className="board">
-      {board.map((row, index) => (
-        <Row
-          isSolving={isSolving}
-          key={index}
-          row={row}
-          // onChange={(cellIndex, value) =>
-          onChange={(e, cellIndex, value) =>
-            onChange(e, index, cellIndex, value)
-          }
-        />
-      ))}
+    <div className="board-container">
+      <div className="board">
+        {board.map((row, index) => (
+          <Row
+            isSolving={isSolving}
+            key={index}
+            row={row}
+            onChange={(e, cellIndex, value) =>
+              onChange(e, index, cellIndex, value)
+            }
+          />
+        ))}
+      </div>
     </div>
   );
 };
+
+// To be modified for showing 3x3 Blocks
+// const Board = ({ board, onChange, isSolving }) => {
+//   return (
+//     <div className="board-container">
+//       <div className="board">
+//         {board.map((row, index) => (
+//           if (row === 0 || row === 3 || row === 9)
+//           {
+//             <Row
+//               isSolving={isSolving}
+//               key={index}
+//               row={row}
+//               onChange={(e, cellIndex, value) =>
+//                 onChange(e, index, cellIndex, value)
+//               }
+//             />
+
+//           }
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
 
 // A component that renders the main app
 const App = () => {
@@ -172,14 +214,13 @@ const App = () => {
 
   // A handler function that updates the board when the user changes a cell value
   const handleCellChange = (event, rowIndex, cellIndex, value) => {
-    if (!/^[0-9]$/.test(value)) {
-      return;
-    }
+    // if (!/^[0-9]$/.test(value)) {
+    //   return;
+    // }
 
-    if (!isSolving && event)
+    if (event.target.className === "cell")
     {
-      console.log("handleClick target", event.target.className);
-      if (event.target.className === "cell")
+      if (!isSolving && event)
       {
         event.target.style.fontWeight = "bold"; 
       }
@@ -190,7 +231,7 @@ const App = () => {
     let newBoard = [...board];
 
     // Update the cell value with the user input
-    newBoard[rowIndex][cellIndex] = value;
+    newBoard[rowIndex][cellIndex] = value % 10; // just show the last entered digit
 
     // if (!isSolving)
     // {
@@ -297,14 +338,16 @@ const App = () => {
   };
 
   return (
-    <div className="app">
-      <h1>Sudoku Solver App</h1>
-      <Board board={board} onChange={handleCellChange} isSolving={isSolving} />
-      <div className="buttons">
-        <button onClick={handleResetClick}>Reset</button>
-        <button onClick={handleSolveClick}>Solve</button>
+    <div className="app-container">
+      <div className="app">
+        <h1 className="app-header">Sudoku Solver App</h1>
+        <Board board={board} onChange={handleCellChange} isSolving={isSolving} />
+        <div className="sudoku-buttons-group">
+          <button className="sudoku-button" onClick={handleResetClick}>Reset</button>
+          <button className="sudoku-button" onClick={handleSolveClick}>Solve</button>
+        </div>
+        <p className="message">{message}</p>
       </div>
-      <p className="message">{message}</p>
     </div>
   );
 };
