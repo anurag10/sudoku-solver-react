@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/sudoku-solver-react/static/css/main.6d72a9a5.css",
-    "main.js": "/sudoku-solver-react/static/js/main.d19fd881.js",
+    "main.css": "/sudoku-solver-react/static/css/main.f9a9d137.css",
+    "main.js": "/sudoku-solver-react/static/js/main.af7f6f72.js",
     "static/js/787.b028bb5c.chunk.js": "/sudoku-solver-react/static/js/787.b028bb5c.chunk.js",
     "index.html": "/sudoku-solver-react/index.html",
-    "main.6d72a9a5.css.map": "/sudoku-solver-react/static/css/main.6d72a9a5.css.map",
-    "main.d19fd881.js.map": "/sudoku-solver-react/static/js/main.d19fd881.js.map",
+    "main.f9a9d137.css.map": "/sudoku-solver-react/static/css/main.f9a9d137.css.map",
+    "main.af7f6f72.js.map": "/sudoku-solver-react/static/js/main.af7f6f72.js.map",
     "787.b028bb5c.chunk.js.map": "/sudoku-solver-react/static/js/787.b028bb5c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6d72a9a5.css",
-    "static/js/main.d19fd881.js"
+    "static/css/main.f9a9d137.css",
+    "static/js/main.af7f6f72.js"
   ]
 }
