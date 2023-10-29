@@ -142,21 +142,58 @@ const Row = ({ row, onChange, isSolving }) => {
   );
 };
 
+// A component that renders a single row of the Sudoku board
+const BlockRow = ({ blockRow, onChange, isSolving, blockRowIndex}) => {
+  return (
+    <div className="block-row-container">
+      {
+        <div className="block-row">
+          <Block
+            isSolving={isSolving}
+            blockColIndex={0}
+            blockRowIndex={blockRowIndex}
+            block={blockRow[0]}
+            onChange={onChange}
+          />
+          <Block
+            isSolving={isSolving}
+            blockColIndex={1}
+            blockRowIndex={blockRowIndex}
+            block={blockRow[1]}
+            onChange={onChange}
+          />
+          <Block
+            isSolving={isSolving}
+            blockColIndex={2}
+            blockRowIndex={blockRowIndex}
+            block={blockRow[2]}
+            onChange={onChange}
+          />
+        </div>
+      }
+    </div>
+  );
+};
+
 // To be modified for showing 3x3 Blocks
-// const Block = ({ row, onChange, isSolving }) => {
-//   return (
-//     <div className="block">
-//       {row.map((value, index) => (
-//         <Cell
-//           isSolving={isSolving}
-//           key={index}
-//           value={value}
-//           onChange={(e) => onChange(e, index, e.target.value)}
-//         />
-//       ))}
-//     </div>
-//   );
-// };
+const Block = ({ block, onChange, isSolving, blockRowIndex, blockColIndex }) => {
+  return (
+    <div className="block-container">
+      <div className="block">
+        {block.map((row, index) => (
+          <Row
+            isSolving={isSolving}
+            key={3*blockRowIndex + index}
+            row={row}
+            onChange={(e, cellIndex, value) =>
+              onChange(e, 3*blockRowIndex + index, 3*blockColIndex + cellIndex, value)
+            }
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 // A component that renders the entire Sudoku board
 const Board = ({ board, onChange, isSolving }) => {
@@ -179,28 +216,41 @@ const Board = ({ board, onChange, isSolving }) => {
 };
 
 // To be modified for showing 3x3 Blocks
-// const Board = ({ board, onChange, isSolving }) => {
-//   return (
-//     <div className="board-container">
-//       <div className="board">
-//         {board.map((row, index) => (
-//           if (row === 0 || row === 3 || row === 9)
-//           {
-//             <Row
-//               isSolving={isSolving}
-//               key={index}
-//               row={row}
-//               onChange={(e, cellIndex, value) =>
-//                 onChange(e, index, cellIndex, value)
-//               }
-//             />
+const Board2 = ({ board, onChange, isSolving }) => {
+  let blockStartRow = [0, 3, 6];
+  let blockStartCol = [0, 3, 6];
+  let blocks = [[],[],[]];
 
-//           }
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
+  for (let startRow of blockStartRow) {
+    for (let startCol of blockStartCol) {
+      const blockSize = 3;
+      let block3x3 = [[], [], []];
+      for (let row = startRow; row < (startRow + blockSize); row++) {
+        for (let col = startCol; col < (startCol + blockSize); col++) {
+            block3x3[row-startRow][col-startCol] = board[row][col];
+        }
+      }
+      blocks[startRow / 3][startCol / 3] = block3x3;
+    }
+  }
+
+  return (
+    <div className="board-container">
+      <div className="board">
+        {blocks.map((block, blockRowIndex) => (
+        <BlockRow
+          isSolving={isSolving}
+          key={blockRowIndex}
+          blockRow={block}
+          blockRowIndex={blockRowIndex}
+          onChange={onChange}
+        />
+        // <p>Hello this is trial</p>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 // A component that renders the main app
 const App = () => {
@@ -218,6 +268,11 @@ const App = () => {
     //   return;
     // }
 
+    if (value < 0 || value > 100)
+    {
+      return;
+    }
+
     if (event.target.className === "cell")
     {
       if (!isSolving && event)
@@ -226,7 +281,11 @@ const App = () => {
       }
     }
 
-    console.log("isSolving:", isSolving);
+    console.log(
+      "handleCellChange target:", event.target.className,
+      " rowIndex:", rowIndex,
+      " cellIndex:", cellIndex,
+      " value:", value);
     // Copy the current board
     let newBoard = [...board];
 
@@ -341,7 +400,8 @@ const App = () => {
     <div className="app-container">
       <div className="app">
         <h1 className="app-header">Sudoku Solver App</h1>
-        <Board board={board} onChange={handleCellChange} isSolving={isSolving} />
+        <h3 className="app-subheader">Enter a Sudoku puzzle here and get it's solution :)</h3>
+        { <Board2 board={board} onChange={handleCellChange} isSolving={isSolving} /> }
         <div className="sudoku-buttons-group">
           <button className="sudoku-button" onClick={handleResetClick}>Reset</button>
           <button className="sudoku-button" onClick={handleSolveClick}>Solve</button>
